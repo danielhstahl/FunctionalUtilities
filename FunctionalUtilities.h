@@ -1,6 +1,7 @@
 #ifndef FUTILITIES
 #define FUTILITIES
 #include <algorithm>
+#include <vector>
 namespace futilities{
     //template<typename myArray>
     /**
@@ -28,13 +29,33 @@ namespace futilities{
             }
         }
     }
-    void for_each_parallel(auto begin, auto end, auto&& fn){ //reuse array
+    template<typename incr, typename fnToApply>
+    auto for_each_parallel(incr begin, incr end, fnToApply&& fn)->std::vector<decltype(fn(begin))>{
+        auto myVal=fn(begin);
+        std::vector<decltype(myVal)> myVector(end-begin); 
+        myVector[0]=myVal;
+        #pragma omp parallel
+        {//multithread using openmp
+            #pragma omp for //multithread using openmp
+            for(auto it = begin+1; it < end; ++it){
+                 myVector[it-begin]=fn(it);   
+            }
+        }
+        return myVector;
+    }
+    /*void for_each_parallel(auto begin, auto end, auto&& fn){
         #pragma omp parallel
         {//multithread using openmp
             #pragma omp for //multithread using openmp
             for(auto it = begin; it < end; ++it){
                  fn(it);   
             }
+        }
+    }*/
+    void for_each(auto begin, auto end, auto&& fn){ 
+
+        for(auto it = begin; it < end; ++it){
+            fn(it);   
         }
     }
     
@@ -79,7 +100,8 @@ namespace futilities{
         }
         return myNum;
     }
-    auto sum(auto begin, auto end, auto&& fn){
+    template<typename incr, typename fnToApply>
+    auto sum(incr begin, incr end, fnToApply&& fn)->decltype(fn(begin)){
         auto myNum=fn(begin);
         for(int i=begin+1; i<end; ++i){
             myNum+=fn(i);   

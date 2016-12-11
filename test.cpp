@@ -10,6 +10,12 @@ TEST_CASE("Test for_each_parallel", "[Functional]"){
     };
     REQUIRE(futilities::for_each_parallel(std::move(testV), squareTestV)==std::vector<int>({25, 36, 49}));
 }
+TEST_CASE("Test for_each_parallel iterator", "[Functional]"){
+    auto squareTestV=[](auto& val){
+        return val*val;
+    };
+    REQUIRE(futilities::for_each_parallel(5, 8, squareTestV)==std::vector<int>({25, 36, 49}));
+}
 TEST_CASE("Test for_each", "[Functional]"){
     std::vector<int> testV={5, 6, 7};
     auto squareTestV=[](auto& val){
@@ -43,4 +49,11 @@ TEST_CASE("Test sum iterator", "[Functional]"){
         return val;
     };
     REQUIRE(futilities::sum(5, 10, valTestV)==35);
+}
+TEST_CASE("Test sum nontrivial", "[Functional]"){
+    //std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& val){
+        return val*val;
+    };
+    REQUIRE(futilities::sum(5, 10, valTestV)==255);
 }
