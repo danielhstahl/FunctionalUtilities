@@ -37,3 +37,10 @@ TEST_CASE("Test sum", "[Functional]"){
     };
     REQUIRE(futilities::sum(testV, valTestV)==35);
 }
+TEST_CASE("Test sum iterator", "[Functional]"){
+    //std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& val){
+        return val;
+    };
+    REQUIRE(futilities::sum(5, 10, valTestV)==35);
+}
