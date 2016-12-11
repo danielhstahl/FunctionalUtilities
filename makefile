@@ -3,4 +3,4 @@ test:test.o
 test.o:test.cpp
 	g++ -std=c++14 -O3 -pthread -c test.cpp -fopenmp 
 clean:
-	-rm *.o testFunctional
+	-rm *.o test
