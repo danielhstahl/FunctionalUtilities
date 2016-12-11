@@ -3,4 +3,4 @@ test:test.o
 test.o:test.cpp
 	g++ -std=c++14 -O3 -pthread -c test.cpp -fopenmp > log_file.txt 2>&1
 clean:
-	-rm *.o test
+	-rm *.o *.out test

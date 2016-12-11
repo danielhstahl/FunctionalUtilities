@@ -1,3 +1,5 @@
 test
 *.o
 .vscode
+*.out
+log_file.txt
