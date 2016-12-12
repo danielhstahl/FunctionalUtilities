@@ -15,11 +15,26 @@ namespace futilities{
         {//multithread using openmp
             #pragma omp for //multithread using openmp
             for(auto it = array.begin(); it < array.end(); ++it){
-                 *it=fn(*it);   
+                 *it=fn(*it, it-array.begin());   
             }
         }
         return std::move(array);
     }
+
+
+    /*template<typename ... Types>
+    auto for_each_parallel(auto&& array1, const Types ...& array2, auto&& fn){ //reuse array
+        int n=array1.size();
+        #pragma omp parallel
+        {//multithread using openmp
+            #pragma omp for //multithread using openmp
+            for(int i=0;i<n; ++i){
+                 array1[i]=fn(array1[i], array2[i]);   
+            }
+        }
+        return std::move(array);
+    }*/
+    
     /**
         @begin first index
         @end last index
@@ -57,7 +72,7 @@ namespace futilities{
     */
     auto for_each(auto&& array, auto&& fn){ //reuse array
         for(auto it = array.begin(); it < array.end(); ++it){
-                *it=fn(*it);   
+            *it=fn(*it, it-array.begin());   
         }
         return std::move(array);
     }
@@ -84,7 +99,7 @@ namespace futilities{
     */
     auto cumulative_sum(auto&& array, auto&& fn){
         for(auto it = array.begin(); it < array.end(); ++it){
-            *it=fn(*it)+*std::prev(it);   
+            *it=fn(*it, it-array.begin())+*std::prev(it);   
         }
         return std::move(array);
     }
@@ -96,10 +111,10 @@ namespace futilities{
     template<typename Number>
     Number sum(const std::vector<Number>& array, auto&& fn){
         auto it=array.begin();
-        Number myNum=fn(*it);
+        Number myNum=fn(*it, 0);
         ++it;
         for(it; it < array.end(); ++it){
-            myNum+=fn(*it);   
+            myNum+=fn(*it, it-array.begin());   
         }
         return myNum;
     }
