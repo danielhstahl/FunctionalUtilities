@@ -20,6 +20,17 @@ namespace futilities{
         }
         return std::move(array);
     }
+    auto for_each_parallel_copy(const auto& array, auto&& fn){ //reuse array
+        auto myArray=array;
+        #pragma omp parallel
+        {//multithread using openmp
+            #pragma omp for //multithread using openmp
+            for(auto it = myArray.begin(); it < myArray.end(); ++it){
+                 *it=fn(*it, it-myArray.begin());   
+            }
+        }
+        return myArray;
+    }
 
 
     /*template<typename ... Types>
@@ -60,11 +71,13 @@ namespace futilities{
         @end last index
         @fn function to apply to every element in the array
     */
-    void for_each(auto begin, auto end, auto&& fn){
+    /*void for_each(auto begin, auto end, auto&& fn){
         for(auto it = begin; it < end; ++it){
             fn(it);   
         }
-    }
+    }*/
+
+
     /**
         @array std-style container
         @fn function to apply to every element in the array
@@ -127,10 +140,20 @@ namespace futilities{
     template<typename incr, typename fnToApply>
     auto sum(incr begin, incr end, fnToApply&& fn)->decltype(fn(begin)){
         auto myNum=fn(begin);
-        for(int i=begin+1; i<end; ++i){
+        for(incr i=begin+1; i<end; ++i){
             myNum+=fn(i);   
         }
         return myNum;
     }
+    template<typename incr, typename init, typename fnToApply>
+    auto recurse(const incr& n, const incr& index, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
+        return index>1?recurse(n, index-1, fn(initValue, n-index), fn):fn(initValue, n-index);//n to 1 inclusive
+    }
+    template<typename incr, typename init, typename fnToApply>
+    auto recurse(const incr& n, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
+        return n>1?recurse(n, n-1, fn(initValue, 0), fn):fn(initValue, 0);//n to 1 inclusive
+    }
+
+    
 }
 #endif
