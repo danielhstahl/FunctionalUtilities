@@ -20,16 +20,16 @@ namespace futilities{
         }
         return std::move(array);
     }
-    auto for_each_parallel_copy(const auto& array, auto&& fn){ //reuse array
-        auto myArray=array;
+    auto for_each_parallel_copy(auto array, auto&& fn){ //reuse array
+        //auto myArray=array;
         #pragma omp parallel
         {//multithread using openmp
             #pragma omp for //multithread using openmp
-            for(auto it = myArray.begin(); it < myArray.end(); ++it){
-                 *it=fn(*it, it-myArray.begin());   
+            for(auto it = array.begin(); it < array.end(); ++it){
+                 *it=fn(*it, it-array.begin());   
             }
         }
-        return myArray;
+        return array;
     }
 
 
