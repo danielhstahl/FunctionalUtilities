@@ -1,7 +1,0 @@
-test.cpp:65:84: error: macro "REQUIRE" passed 5 arguments, but takes just 1
-     REQUIRE(futilities::plus_equals_parallel(testV, valTestV)=={30, 42, 56, 72, 90});
-                                                                                    ^
-test.cpp: In function ‘void ____C_A_T_C_H____T_E_S_T____60()’:
-test.cpp:65:5: error: ‘REQUIRE’ was not declared in this scope
-     REQUIRE(futilities::plus_equals_parallel(testV, valTestV)=={30, 42, 56, 72, 90});
-     ^

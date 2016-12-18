@@ -1,5 +1,6 @@
 test
 *.o
 .vscode
+autom4te.cache
 *.out
 log_file.txt
