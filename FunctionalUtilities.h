@@ -10,7 +10,8 @@ namespace futilities{
         @fn function to apply to every element in the array
         @returns new array with fn applied to original array
     */
-    auto for_each_parallel(auto&& array, auto&& fn){ //reuse array
+    template<typename Array, typename Function>
+    auto for_each_parallel(Array&& array, Function&& fn){ //reuse array
         #pragma omp parallel
         {//multithread using openmp
             #pragma omp for //multithread using openmp
@@ -20,7 +21,8 @@ namespace futilities{
         }
         return std::move(array);
     }
-    auto for_each_parallel_copy(auto array, auto&& fn){ //reuse array
+    template<typename Array, typename Function>
+    auto for_each_parallel_copy(Array array, Function&& fn){ //reuse array
         //auto myArray=array;
         #pragma omp parallel
         {//multithread using openmp
@@ -83,7 +85,8 @@ namespace futilities{
         @fn function to apply to every element in the array
         @returns new array with fn applied to original array
     */
-    auto for_each(auto&& array, auto&& fn){ //reuse array
+    template<typename Array, typename Function>
+    auto for_each(Array&& array, Function&& fn){ //reuse array
         for(auto it = array.begin(); it < array.end(); ++it){
             *it=fn(*it, it-array.begin());   
         }
@@ -96,8 +99,8 @@ namespace futilities{
         @fn function to apply to number in sequence
         @returns new array of results of applying fn to sequence
     */
-    template<typename Number>
-    std::vector<Number> for_emplace_back(const Number& init, const Number& end, int n, auto&& fn){
+    template<typename Number, typename Function>
+    std::vector<Number> for_emplace_back(const Number& init, const Number& end, int n, Function&& fn){
         std::vector<Number> myArray;
         Number dx=(end-init)/(double)(n-1);
         for(int i=0; i<n; ++i){
@@ -110,7 +113,8 @@ namespace futilities{
         @fn function to apply to each element
         @returns new array of results of applying fn to sequence and cumulative summing
     */
-    auto cumulative_sum(auto&& array, auto&& fn){
+    template<typename Array, typename Function>
+    auto cumulative_sum(Array&& array, Function&& fn){
         for(auto it = array.begin(); it < array.end(); ++it){
             *it=fn(*it, it-array.begin())+*std::prev(it);   
         }
@@ -121,8 +125,8 @@ namespace futilities{
         @fn function to apply to each element
         @returns result of summing every element
     */
-    template<typename Number>
-    Number sum(const std::vector<Number>& array, auto&& fn){
+    template<typename Number, typename Function>
+    Number sum(const std::vector<Number>& array, Function&& fn){
         auto it=array.begin();
         Number myNum=fn(*it, 0);
         ++it;
