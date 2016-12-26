@@ -158,6 +158,19 @@ namespace futilities{
         return n>1?recurse(n, n-1, fn(initValue, 0), fn):fn(initValue, 0);//n to 1 inclusive
     }
 
+
+    template<typename incr, typename init, typename fnToApply, typename keepGoing>
+    auto recurse(const incr& n, const incr& index, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
+        auto fnVal=fn(initValue, n-index);
+        return index>1&&kpg(initValue, fnVal)?recurse(n, index-1, fnVal, fn):fnVal;//n to 1 inclusive
+    }
+
+    template<typename incr, typename init, typename fnToApply, typename keepGoing>
+    auto recurse(const incr& n, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
+        auto fnVal=fn(initValue, 0);
+        return n>1&&kpg(initValue, fnVal)?recurse(n, n-1, fnVal, fn):fnVal;//n to 1 inclusive
+    }
+
     
 }
 #endif
