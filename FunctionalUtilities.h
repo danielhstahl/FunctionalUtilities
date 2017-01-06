@@ -149,17 +149,25 @@ namespace futilities{
         }
         return myNum;
     }
-    template<typename incr, typename init, typename fnToApply>
+    /*template<typename incr, typename init, typename fnToApply>
     auto recurse(const incr& n, const incr& index, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
         return index>1?recurse(n, index-1, fn(initValue, n-index), fn):fn(initValue, n-index);//n to 1 inclusive
     }
     template<typename incr, typename init, typename fnToApply>
     auto recurse(const incr& n, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
         return n>1?recurse(n, n-1, fn(initValue, 0), fn):fn(initValue, 0);//n to 1 inclusive
+    }*/
+    template<typename incr, typename init, typename fnToApply>
+    auto recurse(const incr& n, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
+
+        auto fnVal=fn(initValue, 0);
+        for(incr i=0;i<n;++i){
+            fnVal=fn(fnVal, i);
+        }
+        return fnVal;
     }
 
-
-    template<typename incr, typename init, typename fnToApply, typename keepGoing>
+    /*template<typename incr, typename init, typename fnToApply, typename keepGoing>
     auto recurse(const incr& n, const incr& index, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
         auto fnVal=fn(initValue, n-index);
         return index>1&&kpg(initValue, fnVal)?recurse(n, index-1, fnVal, fn):fnVal;//n to 1 inclusive
@@ -169,8 +177,19 @@ namespace futilities{
     auto recurse(const incr& n, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
         auto fnVal=fn(initValue, 0);
         return n>1&&kpg(initValue, fnVal)?recurse(n, n-1, fnVal, fn):fnVal;//n to 1 inclusive
-    }
+    }*/
 
+
+    template<typename incr, typename init, typename fnToApply, typename keepGoing>
+    auto recurse(const incr& n, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
+        incr i=0;
+        auto fnVal=fn(initValue, 0);
+        while(i<n&&kpg(initValue, fnVal)){
+            fnVal=fn(fnVal, i);
+            ++i;
+        }
+        return fnVal;
+    }
     
 }
 #endif
