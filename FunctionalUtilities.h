@@ -68,6 +68,18 @@ namespace futilities{
         }
         return myVector;
     }
+
+    template<typename incr, typename beginValue, typename fnToApply>
+    auto for_each_running_total(incr begin, incr end, const beginValue& init, fnToApply&& fn)->std::vector<decltype(fn(begin))>{
+        auto myVal=fn(begin, init);
+        std::vector<decltype(myVal)> myVector(end-begin); 
+        //decltype(myVal) runningTotal=0; 
+        myVector[0]=myVal;
+        for(auto it = begin+1; it < end; ++it){
+            myVector[it-begin]=fn(it, init+=myVector[it-begin-1]);   
+        }
+        return myVector;
+    }
     /**
         @begin first index
         @end last index
@@ -126,9 +138,9 @@ namespace futilities{
         @returns result of summing every element
     */
     template<typename Number, typename Function>
-    Number sum(const std::vector<Number>& array, Function&& fn){
+    auto sum(const std::vector<Number>& array, Function&& fn){
         auto it=array.begin();
-        Number myNum=fn(*it, 0);
+        auto myNum=fn(*it, 0);
         ++it;
         for(it; it < array.end(); ++it){
             myNum+=fn(*it, it-array.begin());   
