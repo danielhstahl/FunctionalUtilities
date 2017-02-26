@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 #include "FunctionalUtilities.h"
-
+ 
 
 TEST_CASE("Test for_each_parallel", "[Functional]"){
     std::vector<int> testV={5, 6, 7};
@@ -63,7 +63,7 @@ TEST_CASE("Test recurse", "[Functional]"){
     auto valTestV=[](const auto& val, const auto& index){
         return val*2;
     }; 
-    REQUIRE(futilities::recurse(5, 1, valTestV)==pow(2, 5));
+    REQUIRE(futilities::recurse(5, 1, valTestV)==pow(2, 6));
 } 
 TEST_CASE("Test vector recurse", "[Functional]"){
     //std::vector<int> testV={5, 6, 7, 8, 9};
@@ -71,7 +71,7 @@ TEST_CASE("Test vector recurse", "[Functional]"){
         return std::vector<double>({val[0]*2, val[1]*2});
     }; 
     auto myTest=futilities::recurse(5, std::vector<double>({1, 1}), valTestV);
-    REQUIRE(myTest[0]==pow(2, 5));
+    REQUIRE(myTest[0]==pow(2, 6));
 } 
  
 /*TEST_CASE("Test compilation", "[Functional]"){

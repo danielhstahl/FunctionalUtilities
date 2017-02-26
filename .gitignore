@@ -4,5 +4,8 @@ test
 autom4te.cache
 *.out
 log_file.txt
+*.gcov
+*.gcda
+*.gcno
 *.obj
 *.exe

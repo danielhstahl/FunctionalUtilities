@@ -1,17 +1,19 @@
 language: cpp
 sudo: true
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+    packages:
+      - g++-5
+# [...]
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5; fi
+
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env:
-         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-
+ 
     - os: linux
       addons:
         apt:
@@ -22,19 +24,13 @@ matrix:
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
-
 before_install:
     - eval "${MATRIX_EVAL}"
     #- g++ --version
 script:
   - make
   - ./test
+
+after_success:
+  - ./cleantest.sh
+  - bash <(curl -s https://codecov.io/bash)
