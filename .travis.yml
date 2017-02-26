@@ -21,8 +21,8 @@ before_install:
 script:
   - make
   - ./test
-  - gcov test
+  - gcov FunctionalUtilities.h
 
 after_success:
-  - ./cleantest.sh
+  #- ./cleantest.sh
   - bash <(curl -s https://codecov.io/bash) 
