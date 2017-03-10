@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 namespace futilities{
-    //template<typename myArray>
+    
     /**
         This function runs in parallel when compiled with openmp enabled
         @array std-style container
@@ -21,6 +21,30 @@ namespace futilities{
         }
         return std::move(array);
     }
+    /**
+        This function runs in parallel when compiled with openmp enabled
+        @array std-style container
+        @fn function to apply to every element in the array
+        @returns new array with fn applied to original array
+    */
+    template<typename Array, typename Function>
+    auto for_each_parallel_exclude_last(Array&& array, Function&& fn){ //reuse array
+        #pragma omp parallel
+        {//multithread using openmp
+            #pragma omp for //multithread using openmp
+            for(auto it = array.begin(); it < array.end()-1; ++it){
+                 *it=fn(*it, it-array.begin());   
+            }
+        }
+        array.pop_back();
+        return std::move(array);
+    }
+    /**
+        This function runs in parallel when compiled with openmp enabled
+        @array std-style container
+        @fn function to apply to every element in the array
+        @returns new array with fn applied to original array
+    */
     template<typename Array, typename Function>
     auto for_each_parallel_copy(Array array, Function&& fn){ //reuse array
         //auto myArray=array;
@@ -35,18 +59,6 @@ namespace futilities{
     }
 
 
-    /*template<typename ... Types>
-    auto for_each_parallel(auto&& array1, const Types ...& array2, auto&& fn){ //reuse array
-        int n=array1.size();
-        #pragma omp parallel
-        {//multithread using openmp
-            #pragma omp for //multithread using openmp
-            for(int i=0;i<n; ++i){
-                 array1[i]=fn(array1[i], array2[i]);   
-            }
-        }
-        return std::move(array);
-    }*/
     
     /**
         @begin first index
@@ -80,17 +92,6 @@ namespace futilities{
         }
         return myVector;
     }
-    /**
-        @begin first index
-        @end last index
-        @fn function to apply to every element in the array
-    */
-    /*void for_each(auto begin, auto end, auto&& fn){
-        for(auto it = begin; it < end; ++it){
-            fn(it);   
-        }
-    }*/
-
 
     /**
         @array std-style container
@@ -104,6 +105,7 @@ namespace futilities{
         }
         return std::move(array);
     }
+    
     /**
         @init first number in sequence
         @end last number in sequence

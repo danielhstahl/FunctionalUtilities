@@ -74,10 +74,10 @@ TEST_CASE("Test vector recurse", "[Functional]"){
     REQUIRE(myTest[0]==pow(2, 6));
 } 
  
-/*TEST_CASE("Test compilation", "[Functional]"){
+TEST_CASE("Test de-increment", "[Functional]"){
     std::vector<int> testV={5, 6, 7, 8, 9};
     auto valTestV=[](const auto& val, const auto& index){
         return val;
     };
-    REQUIRE(futilities::cumulative_sum(testV, valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
-}*/
+    REQUIRE(futilities::for_each_parallel_exclude_last(testV, valTestV)==std::vector<int>({5, 6, 7, 8}));
+}
