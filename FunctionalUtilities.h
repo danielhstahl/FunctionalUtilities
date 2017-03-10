@@ -46,6 +46,20 @@ namespace futilities{
         @returns new array with fn applied to original array
     */
     template<typename Array, typename Function>
+    auto for_each_exclude_last(Array&& array, Function&& fn){ //reuse array
+        for(auto it = array.begin(); it < array.end()-1; ++it){
+            *it=fn(*it, *(it+1), it-array.begin());   
+        }
+        array.pop_back();
+        return std::move(array);
+    }
+    /**
+        This function runs in parallel when compiled with openmp enabled
+        @array std-style container
+        @fn function to apply to every element in the array
+        @returns new array with fn applied to original array
+    */
+    template<typename Array, typename Function>
     auto for_each_parallel_copy(Array array, Function&& fn){ //reuse array
         //auto myArray=array;
         #pragma omp parallel
@@ -203,6 +217,15 @@ namespace futilities{
             ++i;
         }
         return fnVal;
+    }
+
+    template<typename init, typename fnToApply, typename keepGoing>
+    auto recurse_move(init&& initValue, fnToApply&& fn, keepGoing&& kpg){
+        initValue=fn(initValue);
+        while(kpg(initValue)){
+            initValue=fn(initValue);
+        }
+        return initValue;
     }
     
 }

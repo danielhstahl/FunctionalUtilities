@@ -76,8 +76,8 @@ TEST_CASE("Test vector recurse", "[Functional]"){
  
 TEST_CASE("Test de-increment", "[Functional]"){
     std::vector<int> testV={5, 6, 7, 8, 9};
-    auto valTestV=[](const auto& val, const auto& index){
-        return val;
+    auto valTestV=[](const auto& val, const auto& next, const auto& index){
+        return val+next;
     };
-    REQUIRE(futilities::for_each_parallel_exclude_last(testV, valTestV)==std::vector<int>({5, 6, 7, 8}));
+    REQUIRE(futilities::for_each_exclude_last(testV, valTestV)==std::vector<int>({11, 13, 15, 17}));
 }
