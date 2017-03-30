@@ -95,18 +95,6 @@ namespace futilities{
         return myVector;
     }
 
-    template<typename incr, typename beginValue, typename fnToApply>
-    auto for_each_running_total(incr begin, incr end, const beginValue& init, fnToApply&& fn)->std::vector<decltype(fn(begin))>{
-        auto myVal=fn(begin, init);
-        std::vector<decltype(myVal)> myVector(end-begin); 
-        //decltype(myVal) runningTotal=0; 
-        myVector[0]=myVal;
-        for(auto it = begin+1; it < end; ++it){
-            myVector[it-begin]=fn(it, init+=myVector[it-begin-1]);   
-        }
-        return myVector;
-    }
-
     /**
         @array std-style container
         @fn function to apply to every element in the array
@@ -177,14 +165,7 @@ namespace futilities{
         }
         return myNum;
     }
-    /*template<typename incr, typename init, typename fnToApply>
-    auto recurse(const incr& n, const incr& index, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
-        return index>1?recurse(n, index-1, fn(initValue, n-index), fn):fn(initValue, n-index);//n to 1 inclusive
-    }
-    template<typename incr, typename init, typename fnToApply>
-    auto recurse(const incr& n, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
-        return n>1?recurse(n, n-1, fn(initValue, 0), fn):fn(initValue, 0);//n to 1 inclusive
-    }*/
+
     template<typename incr, typename init, typename fnToApply>
     auto recurse(const incr& n, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
 
@@ -194,18 +175,6 @@ namespace futilities{
         }
         return fnVal;
     }
-
-    /*template<typename incr, typename init, typename fnToApply, typename keepGoing>
-    auto recurse(const incr& n, const incr& index, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
-        auto fnVal=fn(initValue, n-index);
-        return index>1&&kpg(initValue, fnVal)?recurse(n, index-1, fnVal, fn):fnVal;//n to 1 inclusive
-    }
-
-    template<typename incr, typename init, typename fnToApply, typename keepGoing>
-    auto recurse(const incr& n, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
-        auto fnVal=fn(initValue, 0);
-        return n>1&&kpg(initValue, fnVal)?recurse(n, n-1, fnVal, fn):fnVal;//n to 1 inclusive
-    }*/
 
 
     template<typename incr, typename init, typename fnToApply, typename keepGoing>
