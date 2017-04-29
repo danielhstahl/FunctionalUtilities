@@ -65,6 +65,16 @@ TEST_CASE("Test recurse", "[Functional]"){
     }; 
     REQUIRE(futilities::recurse(5, 1, valTestV)==pow(2, 6));
 } 
+TEST_CASE("Test recurse move", "[Functional]"){
+    //std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& val, const auto& index){
+        return val*2;
+    }; 
+    auto keepGoing=[](const auto& val){
+        return val<40;
+    };
+    REQUIRE(futilities::recurse_move(5, 1, valTestV, keepGoing)==pow(2, 5));
+} 
 TEST_CASE("Test vector recurse", "[Functional]"){
     //std::vector<int> testV={5, 6, 7, 8, 9};
     auto valTestV=[](const auto& val, const auto& index){
@@ -73,7 +83,7 @@ TEST_CASE("Test vector recurse", "[Functional]"){
     auto myTest=futilities::recurse(5, std::vector<double>({1, 1}), valTestV);
     REQUIRE(myTest[0]==pow(2, 6));
 } 
- 
+
 TEST_CASE("Test de-increment", "[Functional]"){
     std::vector<int> testV={5, 6, 7, 8, 9};
     auto valTestV=[](const auto& val, const auto& next, const auto& index){

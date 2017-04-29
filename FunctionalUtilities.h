@@ -188,13 +188,14 @@ namespace futilities{
         return fnVal;
     }
 
-    template<typename init, typename fnToApply, typename keepGoing>
-    auto recurse_move(init&& initValue, fnToApply&& fn, keepGoing&& kpg){
-        initValue=fn(initValue);
-        while(kpg(initValue)){
-            initValue=fn(initValue);
+    template<typename incr, typename init, typename fnToApply, typename keepGoing>
+    auto recurse_move(const incr& n, init&& initValue, fnToApply&& fn, keepGoing&& kpg){
+        incr i=0;
+        while(i<n&&kpg(initValue)){
+            initValue=fn(initValue, i);
+             ++i;
         }
-        return initValue;
+        return std::move(initValue);
     }
     
 }
