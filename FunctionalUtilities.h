@@ -188,7 +188,7 @@ namespace futilities{
         return fnVal;
     }
 
-    /*template<typename incr, typename init, typename fnToApply, typename keepGoing>
+    template<typename incr, typename init, typename fnToApply, typename keepGoing>
     auto recurse_move(const incr& n, init&& initValue, fnToApply&& fn, keepGoing&& kpg){
         incr i=0;
         while(i<n&&kpg(initValue)){
@@ -196,7 +196,7 @@ namespace futilities{
              ++i;
         }
         return std::move(initValue);
-    }*/
+    }
     
 }
 #endif
