@@ -32,7 +32,7 @@ namespace futilities{
         #pragma omp parallel
         {//multithread using openmp
             #pragma omp for //multithread using openmp
-            for(auto it = array.begin()+begin; it < array.end()-end; ++it){
+            for(auto it = array.begin()+begin; it < array.end()-fromEnd; ++it){
                  *it=fn(*it, it-array.begin());   
             }
         }
