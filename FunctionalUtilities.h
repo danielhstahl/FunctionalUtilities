@@ -1,5 +1,6 @@
 #ifndef FUTILITIES
 #define FUTILITIES
+
 #include <algorithm>
 #include <vector>
 namespace futilities{
