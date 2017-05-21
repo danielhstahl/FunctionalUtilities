@@ -25,6 +25,23 @@ namespace futilities{
     /**
         This function runs in parallel when compiled with openmp enabled
         @array std-style container
+        @fn function to apply to elements from "begin" to "fromEnd" in the array
+        @returns new array with fn applied to original array
+    */
+    template<typename Array, typename Function>
+    auto for_each_parallel_subset(Array&& array, int begin, int fromEnd, Function&& fn){ //reuse array
+        #pragma omp parallel
+        {//multithread using openmp
+            #pragma omp for //multithread using openmp
+            for(auto it = array.begin()+begin; it < array.end()-fromEnd; ++it){
+                 *it=fn(*it, it-array.begin());   
+            }
+        }
+        return std::move(array);
+    }
+    /**
+        This function runs in parallel when compiled with openmp enabled
+        @array std-style container
         @fn function to apply to every element in the array
         @returns new array with fn applied to original array
     */
@@ -137,6 +154,9 @@ namespace futilities{
         }
         return std::move(array);
     }
+
+
+
     /**
         @array array to sum over
         @fn function to apply to each element
@@ -148,6 +168,21 @@ namespace futilities{
         auto myNum=fn(*it, 0);
         ++it;
         for(it; it < array.end(); ++it){
+            myNum+=fn(*it, it-array.begin());   
+        }
+        return myNum;
+    }
+    /**
+        @array array to sum over
+        @fn function to apply to each element
+        @returns result of summing every element
+    */
+    template<typename Number, typename Function>
+    auto sum_subset(const std::vector<Number>& array, int beginFrom, int endFrom, Function&& fn){
+        auto it=array.begin()+beginFrom;
+        auto myNum=fn(*it, 0);
+        ++it;
+        for(it; it < array.end()-endFrom; ++it){
             myNum+=fn(*it, it-array.begin());   
         }
         return myNum;
