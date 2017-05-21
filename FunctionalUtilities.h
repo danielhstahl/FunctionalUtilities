@@ -23,6 +23,27 @@ namespace futilities{
         return std::move(array);
     }
     /**
+        This function runs in parallel when compiled with openmp enabled.  Be careful!  It is expected that fn induces side effects.
+        @fnInit  function to get initial index
+        @fnEnd function to get end index
+        @array generic array...eg, an Eigen matrix
+        @fn function to apply to array.  It is expected that fn induces side effects.
+        @returns new array with fn applied to original array
+    */
+    template<typename GetInit, typename GetEnd, typename Array, typename Function>
+    auto for_each_parallel_generic(const GetInit& fnInit, const GetEnd& fnEnd, Array&& array, Function&& fn){ //reuse array
+        auto init=fnInit(array);
+        auto end=fnEnd(array);
+        #pragma omp parallel
+        {//multithread using openmp
+            #pragma omp for //multithread using openmp
+            for(auto it = init; it < end; ++it){
+                 fn(it, array);   
+            }
+        }
+        return std::move(array);
+    }
+    /**
         This function runs in parallel when compiled with openmp enabled
         @array std-style container
         @fn function to apply to elements from "begin" to "fromEnd" in the array
