@@ -183,8 +183,8 @@ namespace futilities{
         @fn function to apply to each element
         @returns result of summing every element
     */
-    template<typename Number, typename Function>
-    auto sum(const std::vector<Number>& array, Function&& fn){
+    template<typename Array, typename Function>
+    auto sum(const Array& array, Function&& fn){
         auto it=array.begin();
         auto myNum=fn(*it, 0);
         ++it;
@@ -198,8 +198,8 @@ namespace futilities{
         @fn function to apply to each element
         @returns result of summing every element
     */
-    template<typename Number, typename Function>
-    auto sum_subset(const std::vector<Number>& array, int beginFrom, int endFrom, Function&& fn){
+    template<typename Array, typename Function>
+    auto sum_subset(const Array& array, int beginFrom, int endFrom, Function&& fn){
         auto it=array.begin()+beginFrom;
         auto myNum=fn(*it, 0);
         ++it;
