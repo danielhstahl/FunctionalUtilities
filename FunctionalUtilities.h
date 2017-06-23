@@ -188,11 +188,12 @@ namespace futilities{
         auto it=array.begin();
         auto myNum=fn(*it, 0);
         ++it;
-        for(it; it < array.end(); ++it){
+        for(;it < array.end(); ++it){
             myNum+=fn(*it, it-array.begin());   
         }
         return myNum;
     }
+    
     /**
         @array array to sum over
         @fn function to apply to each element
