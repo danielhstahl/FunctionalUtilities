@@ -175,6 +175,18 @@ namespace futilities{
         }
         return std::move(array);
     }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function>
+    auto cumulative_sum_copy(Array array, Function&& fn){
+        for(auto it = array.begin(); it < array.end(); ++it){
+            *it=fn(*it, it-array.begin())+*std::prev(it);   
+        }
+        return array;
+    }
 
 
 
