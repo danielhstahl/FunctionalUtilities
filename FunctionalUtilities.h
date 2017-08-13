@@ -63,6 +63,19 @@ namespace futilities{
     /**
         This function runs in parallel when compiled with openmp enabled
         @array std-style container
+        @fn function to apply to elements from "begin" to "fromEnd" in the array
+        @returns new array with fn applied to original array
+    */
+    template<typename Array, typename Function>
+    auto for_each_subset(Array&& array, int begin, int fromEnd, Function&& fn){ //reuse array
+        for(auto it = array.begin()+begin; it < array.end()-fromEnd; ++it){
+            *it=fn(*it, it-array.begin());   
+        }
+        return std::move(array);
+    }
+    /**
+        This function runs in parallel when compiled with openmp enabled
+        @array std-style container
         @fn function to apply to every element in the array
         @returns new array with fn applied to original array
     */
