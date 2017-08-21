@@ -253,24 +253,22 @@ namespace futilities{
     auto recurse(const incr& n, const init& initValue, fnToApply&& fn)->decltype(fn(initValue, 0)){
 
         auto fnVal=fn(initValue, 0);
-        for(incr i=0;i<n;++i){
+        for(incr i=1;i<n;++i){
             fnVal=fn(fnVal, i);
         }
         return fnVal;
     }
-
 
     template<typename incr, typename init, typename fnToApply, typename keepGoing>
     auto recurse(const incr& n, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
         incr i=0;
-        auto fnVal=fn(initValue, 0);
-        while(i<n&&kpg(initValue, fnVal)){
-            fnVal=fn(fnVal, i);
+        auto fnVal=fn(initValue, i);
+        while(i<n&&kpg(fnVal)){
             ++i;
+            fnVal=fn(fnVal, i);
         }
         return fnVal;
     }
-
     template<typename incr, typename init, typename fnToApply, typename keepGoing>
     auto recurse_move(const incr& n, init&& initValue, fnToApply&& fn, keepGoing&& kpg){
         incr i=0;
