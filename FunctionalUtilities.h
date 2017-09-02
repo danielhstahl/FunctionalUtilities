@@ -92,7 +92,7 @@ namespace futilities{
         return std::move(array);
     }
     /**
-        This function runs in parallel when compiled with openmp enabled
+        
         @array std-style container
         @fn function to apply to every element in the array
         @returns new array with fn applied to original array
@@ -176,15 +176,16 @@ namespace futilities{
         }
         return myArray;
     }
+    
     /**
         @array array to cumulate
         @fn function to apply to each element
         @returns new array of results of applying fn to sequence and cumulative summing
     */
     template<typename Array, typename Function>
-    auto cumulative_sum(Array&& array, Function&& fn){
+    auto reduce(Array&& array, Function&& fn){
         for(auto it = array.begin(); it < array.end(); ++it){
-            *it=fn(*it, it-array.begin())+*std::prev(it);   
+            *it=fn(*std::prev(it), *it,  it-array.begin());   
         }
         return std::move(array);
     }
@@ -194,13 +195,58 @@ namespace futilities{
         @returns new array of results of applying fn to sequence and cumulative summing
     */
     template<typename Array, typename Function>
-    auto cumulative_sum_copy(Array array, Function&& fn){
+    auto reduce_reverse(Array&& array, Function&& fn){
+        for(auto it = array.rbegin(); it < array.rend(); ++it){
+            *it=fn(*std::prev(it), *it,  it-array.rbegin());   
+        }
+        return std::move(array);
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function>
+    auto reduce_copy(Array array, Function&& fn){
         for(auto it = array.begin(); it < array.end(); ++it){
-            *it=fn(*it, it-array.begin())+*std::prev(it);   
+            *it=fn(*std::prev(it), *it,  it-array.begin());  
         }
         return array;
     }
 
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function>
+    auto cumulative_sum(Array&& array, Function&& fn){
+
+        return reduce(array, [&](const auto& prev, const auto& curr, const auto& index){
+            return prev+fn(curr, index);
+        });
+
+        /*for(auto it = array.begin(); it < array.end(); ++it){
+            *it=fn(*it, it-array.begin())+*std::prev(it);   
+        }
+        return std::move(array);*/
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function>
+    auto cumulative_sum_copy(Array array, Function&& fn){
+        return reduce(array, [&](const auto& prev, const auto& curr, const auto& index){
+            return prev+fn(curr, index);
+        });
+
+        /*for(auto it = array.begin(); it < array.end(); ++it){
+            *it=fn(*it, it-array.begin())+*std::prev(it);   
+        }
+        return array;*/
+    }
 
 
     /**

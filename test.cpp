@@ -36,6 +36,13 @@ TEST_CASE("Test cumulative sum", "[Functional]"){
     };
     REQUIRE(futilities::cumulative_sum(std::move(testV), valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
 }
+TEST_CASE("Test cumulative sum copy", "[Functional]"){
+    std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& val, const auto& index){
+        return val;
+    };
+    REQUIRE(futilities::cumulative_sum(testV, valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
+}
 TEST_CASE("Test sum", "[Functional]"){
     std::vector<int> testV={5, 6, 7, 8, 9};
     auto valTestV=[](const auto& val, const auto& index){
@@ -90,4 +97,11 @@ TEST_CASE("Test de-increment", "[Functional]"){
         return val+next;
     };
     REQUIRE(futilities::for_each_exclude_last(testV, valTestV)==std::vector<int>({11, 13, 15, 17}));
+}
+TEST_CASE("Test reduce", "[Functional]"){
+    std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
+        return prev+curr;
+    };
+    REQUIRE(futilities::reduce(std::move(testV), valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
 }
