@@ -11,3 +11,8 @@
 
 ## Functional Utilities
 These utilies run in the futilities namespace and are header only.  To run the unit tests, `make` and `./test`
+
+## API definitions
+
+When there is a "copy" in the title of the function, a new array (with potentially different signature) is returned.  This is useful for "purer" functional programming since it retains two arrays but is less efficient.  Note that it is also useful if you want to transform the type of the array; eg from a vector of doubles to a vector of complex<double>'s.
+ 
