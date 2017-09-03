@@ -101,7 +101,49 @@ TEST_CASE("Test de-increment", "[Functional]"){
 TEST_CASE("Test reduce", "[Functional]"){
     std::vector<int> testV={5, 6, 7, 8, 9};
     auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
-        return prev+curr;
+        if(index==0){
+            return curr;
+        }
+        else{
+            return prev+curr;
+        }
+        
     };
     REQUIRE(futilities::reduce(std::move(testV), valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
+}
+TEST_CASE("Test reduce_copy", "[Functional]"){
+    std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
+        if(index==0){
+            return curr;
+        }
+        else{
+            return prev+curr;
+        }
+    };
+    REQUIRE(futilities::reduce(testV, valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
+}
+TEST_CASE("Test reduce_reverse", "[Functional]"){
+    std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
+        if(index==0){
+            return curr;
+        }
+        else{
+            return prev+curr;
+        }
+    };
+    REQUIRE(futilities::reduce_reverse(std::move(testV), valTestV)==std::vector<int>({35, 30, 24, 17, 9}));
+}
+TEST_CASE("Test reduce_reverse_copy", "[Functional]"){
+    std::vector<int> testV={5, 6, 7, 8, 9};
+    auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
+        if(index==0){
+            return curr;
+        }
+        else{
+            return prev+curr;
+        }
+    };
+    REQUIRE(futilities::reduce_reverse_copy(testV, valTestV)==std::vector<int>({35, 30, 24, 17, 9}));
 }

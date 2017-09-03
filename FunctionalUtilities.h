@@ -112,16 +112,18 @@ namespace futilities{
         @returns new array with fn applied to original array
     */
     template<typename Array, typename Function>
-    auto for_each_parallel_copy(Array array, Function&& fn){ //reuse array
-        //auto myArray=array;
+    auto for_each_parallel_copy(const Array& array, Function&& fn){
+        auto myVal=fn(array.front(), 0);
+        auto arrayLength=array.size();
+        std::vector<decltype(myVal)> myVector(arrayLength); 
         #pragma omp parallel
         {//multithread using openmp
             #pragma omp for //multithread using openmp
-            for(auto it = array.begin(); it < array.end(); ++it){
-                 *it=fn(*it, it-array.begin());   
+            for(auto it = 1; it < arrayLength; ++it){
+                myVector[it]=fn(array[it], it);   
             }
         }
-        return array;
+        return myVector;
     }
 
 
@@ -146,6 +148,7 @@ namespace futilities{
         }
         return myVector;
     }
+   
 
     /**
         @array std-style container
@@ -182,9 +185,12 @@ namespace futilities{
         @fn function to apply to each element
         @returns new array of results of applying fn to sequence and cumulative summing
     */
-    template<typename Array, typename Function>
-    auto reduce(Array&& array, Function&& fn){
-        for(auto it = array.begin(); it < array.end(); ++it){
+    template<typename Array, typename Function, typename OptionalFirstItem>
+    auto reduce(Array&& array, Function&& fn, const OptionalFirstItem& item){
+        auto initIt=array.begin();
+        *initIt=fn(item, *initIt, 0); 
+        initIt++;
+        for(auto it = initIt; it < array.end(); ++it){
             *it=fn(*std::prev(it), *it,  it-array.begin());   
         }
         return std::move(array);
@@ -195,8 +201,20 @@ namespace futilities{
         @returns new array of results of applying fn to sequence and cumulative summing
     */
     template<typename Array, typename Function>
-    auto reduce_reverse(Array&& array, Function&& fn){
-        for(auto it = array.rbegin(); it < array.rend(); ++it){
+    auto reduce(Array&& array, Function&& fn){
+        return reduce(array, fn, array.front());
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function, typename OptionalFirstItem>
+    auto reduce_reverse(Array&& array, Function&& fn, const OptionalFirstItem& item){
+        auto initIt=array.rbegin();
+        *initIt=fn(item, *initIt, 0); 
+        initIt++;
+        for(auto it = initIt; it < array.rend(); ++it){
             *it=fn(*std::prev(it), *it,  it-array.rbegin());   
         }
         return std::move(array);
@@ -207,11 +225,57 @@ namespace futilities{
         @returns new array of results of applying fn to sequence and cumulative summing
     */
     template<typename Array, typename Function>
-    auto reduce_copy(Array array, Function&& fn){
-        for(auto it = array.begin(); it < array.end(); ++it){
-            *it=fn(*std::prev(it), *it,  it-array.begin());  
+    auto reduce_reverse(Array&& array, Function&& fn){
+        return reduce_reverse(array, fn, array.front());
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function, typename OptionalFirstItem>
+    auto reduce_copy(const Array& array, Function&& fn, const OptionalFirstItem& item){
+        auto initIt=fn(item, *array.begin(), 0); 
+        std::vector<decltype(initIt)> myVector(array.size());
+        myVector[0]=initIt; 
+        for(auto it = 1; it < array.size(); ++it){
+            myVector[it]=fn(array[it-1], array[it],  it);   
         }
-        return array;
+        return myVector;
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function>
+    auto reduce_copy(const Array& array, Function&& fn){
+        return reduce_copy(array, fn, array.front());
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function, typename OptionalFirstItem>
+    auto reduce_reverse_copy(const Array& array, Function&& fn, const OptionalFirstItem& item){
+        auto initIt=fn(item, *array.rbegin(), 0); 
+        auto arrayLength=array.size();
+        std::vector<decltype(initIt)> myVector(arrayLength);
+        myVector[arrayLength-1]=initIt; 
+        for(auto it = arrayLength-1; it > 0; --it){
+            myVector[it-1]=fn(myVector[it], array[it-1],  arrayLength-it);   
+        }
+        return myVector;
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
+        @returns new array of results of applying fn to sequence and cumulative summing
+    */
+    template<typename Array, typename Function>
+    auto reduce_reverse_copy(const Array& array, Function&& fn){
+        return reduce_reverse_copy(array, fn, array.front());
     }
 
     /**
@@ -221,15 +285,15 @@ namespace futilities{
     */
     template<typename Array, typename Function>
     auto cumulative_sum(Array&& array, Function&& fn){
-
         return reduce(array, [&](const auto& prev, const auto& curr, const auto& index){
-            return prev+fn(curr, index);
+            if(index==0){
+                return fn(curr, index);
+            }
+            else{
+                return prev+fn(curr, index);
+            }
+            
         });
-
-        /*for(auto it = array.begin(); it < array.end(); ++it){
-            *it=fn(*it, it-array.begin())+*std::prev(it);   
-        }
-        return std::move(array);*/
     }
     /**
         @array array to cumulate
@@ -237,15 +301,15 @@ namespace futilities{
         @returns new array of results of applying fn to sequence and cumulative summing
     */
     template<typename Array, typename Function>
-    auto cumulative_sum_copy(Array array, Function&& fn){
-        return reduce(array, [&](const auto& prev, const auto& curr, const auto& index){
-            return prev+fn(curr, index);
+    auto cumulative_sum_copy(const Array& array, Function&& fn){
+        return reduce_copy(array, [&](const auto& prev, const auto& curr, const auto& index){
+            if(index==0){
+                return fn(curr, index);
+            }
+            else{
+                return prev+fn(curr, index);
+            }
         });
-
-        /*for(auto it = array.begin(); it < array.end(); ++it){
-            *it=fn(*it, it-array.begin())+*std::prev(it);   
-        }
-        return array;*/
     }
 
 
