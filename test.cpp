@@ -121,7 +121,7 @@ TEST_CASE("Test reduce_copy", "[Functional]"){
             return prev+curr;
         }
     };
-    REQUIRE(futilities::reduce(testV, valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
+    REQUIRE(futilities::reduce_copy(testV, valTestV)==std::vector<int>({5, 11, 18, 26, 35}));
 }
 TEST_CASE("Test reduce_reverse", "[Functional]"){
     std::vector<int> testV={5, 6, 7, 8, 9};

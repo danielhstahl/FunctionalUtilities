@@ -239,7 +239,7 @@ namespace futilities{
         std::vector<decltype(initIt)> myVector(array.size());
         myVector[0]=initIt; 
         for(auto it = 1; it < array.size(); ++it){
-            myVector[it]=fn(array[it-1], array[it],  it);   
+            myVector[it]=fn(myVector[it-1], array[it],  it);   
         }
         return myVector;
     }
