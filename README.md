@@ -9,8 +9,14 @@
 [cov-badge]: https://codecov.io/gh/phillyfan1138/FunctionalUtilities/branch/master/graph/badge.svg
 [cov-link]:  https://codecov.io/gh/phillyfan1138/FunctionalUtilities
 
+## This library may become outdated with C++17's parallel STL containers!
+
+See [this description of c++17](http://www.modernescpp.com/index.php/c-17-new-algorithm-of-the-standard-template-library).
+
 ## Functional Utilities
-These utilies run in the futilities namespace and are header only.  To run the unit tests, `make` and `./test`
+These utilities run in the futilities namespace and are header only.  To run the unit tests, `make` and `./test`
+
+
 
 ## API definitions
 
