@@ -116,10 +116,11 @@ namespace futilities{
         auto myVal=fn(array.front(), 0);
         auto arrayLength=array.size();
         std::vector<decltype(myVal)> myVector(arrayLength); 
+
         #pragma omp parallel
         {//multithread using openmp
             #pragma omp for //multithread using openmp
-            for(auto it = 1; it < arrayLength; ++it){
+            for(auto it = 0; it < arrayLength; ++it){
                 myVector[it]=fn(array[it], it);   
             }
         }

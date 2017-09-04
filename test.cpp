@@ -16,6 +16,13 @@ TEST_CASE("Test for_each_parallel iterator", "[Functional]"){
     };
     REQUIRE(futilities::for_each_parallel(5, 8, squareTestV)==std::vector<int>({25, 36, 49}));
 }
+TEST_CASE("Test for_each_parallel_copy", "[Functional]"){
+    std::vector<int> testV={5, 6, 7};
+    auto squareTestV=[](auto& val, const auto& index){
+        return val*val;
+    };
+    REQUIRE(futilities::for_each_parallel_copy(testV, squareTestV)==std::vector<int>({25, 36, 49}));
+}
 TEST_CASE("Test for_each", "[Functional]"){
     std::vector<int> testV={5, 6, 7};
     auto squareTestV=[](const auto& val, const auto& index){
