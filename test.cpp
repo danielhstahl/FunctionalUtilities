@@ -2,6 +2,11 @@
 #include "catch.hpp"
 #include "FunctionalUtilities.h"
  
+TEST_CASE("Test template_power", "[Functional]"){
+    double x=2.0;
+
+    REQUIRE(futilities::const_power(x, 3)==8.0);
+}
 
 TEST_CASE("Test for_each_parallel", "[Functional]"){
     std::vector<int> testV={5, 6, 7};

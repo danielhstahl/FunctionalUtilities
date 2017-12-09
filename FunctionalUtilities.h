@@ -3,8 +3,22 @@
 
 #include <algorithm>
 #include <vector>
+
 namespace futilities{
     
+    
+    
+    /**Utility function for integer powers.  
+     * Recursively creates powers at compile time.  
+     * Should be extremely fast.*/
+    template<typename T>
+    constexpr T const_power(const T& number, int N ){
+        return (N == 1) ?             // terminal condition
+            number:                   // and terminal value
+            number*const_power(number, N-1); // recursive definition
+    }
+
+
     /**
         This function runs in parallel when compiled with openmp enabled
         @array std-style container
