@@ -198,6 +198,24 @@ namespace futilities{
     /**
         @array array to cumulate
         @fn function to apply to each element
+        @returns single value of results of applying fn to sequence and reducing
+    */
+    template<typename Array, typename Function, typename OptionalFirstItem>
+    auto reduce_to_single(const Array& array, Function&& fn, const OptionalFirstItem& item){
+        auto curr=fn(item, array.front(), 0); 
+        auto n=array.size();
+        for(int i=1;i<n; ++i){
+            curr=fn(curr, array[i],  i);   
+        }
+        return curr;
+    }
+    template<typename Array, typename Function>
+    auto reduce_to_single(const Array& array, Function&& fn){
+        return reduce_to_single(array, fn, array.front());
+    }
+    /**
+        @array array to cumulate
+        @fn function to apply to each element
         @returns new array of results of applying fn to sequence and cumulative summing
     */
     template<typename Array, typename Function, typename OptionalFirstItem>

@@ -159,3 +159,17 @@ TEST_CASE("Test reduce_reverse_copy", "[Functional]"){
     };
     REQUIRE(futilities::reduce_reverse_copy(testV, valTestV)==std::vector<int>({35, 30, 24, 17, 9}));
 }
+TEST_CASE("Test reduce_to_single", "[Functional]"){
+    std::vector<int> testV={6, 3, 5, 8, 9};
+    auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
+       return prev>curr?prev:curr;
+    };
+    REQUIRE(futilities::reduce_to_single(testV, valTestV)==9);
+}
+TEST_CASE("Test reduce_to_single first index", "[Functional]"){
+    std::vector<int> testV={6, 3, 5, 8, 9};
+    auto valTestV=[](const auto& prev, const auto& curr, const auto& index){
+       return prev>curr?prev:curr;
+    };
+    REQUIRE(futilities::reduce_to_single(testV, valTestV, 10)==10);
+}
