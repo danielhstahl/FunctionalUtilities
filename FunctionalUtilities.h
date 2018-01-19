@@ -177,6 +177,17 @@ namespace futilities{
         }
         return std::move(array);
     }
+
+    template<typename incr, typename fnToApply>
+    auto for_each(incr begin, incr end, fnToApply&& fn)->std::vector<decltype(fn(begin))>{
+        auto myVal=fn(begin);
+        std::vector<decltype(myVal)> myVector(end-begin); 
+        myVector[0]=myVal;
+        for(auto it = begin+1; it < end; ++it){
+            myVector[it-begin]=fn(it);   
+        }
+        return myVector;
+    }
     
     /**
         @init first number in sequence
@@ -201,11 +212,11 @@ namespace futilities{
         @returns single value of results of applying fn to sequence and reducing
     */
     template<typename Array, typename Function, typename OptionalFirstItem>
-    auto reduce_to_single(const Array& array, Function&& fn, const OptionalFirstItem& item){
+    auto reduce_to_single(const Array& array, Function&& fn,  OptionalFirstItem&& item){
         auto curr=fn(item, array.front(), 0); 
         auto n=array.size();
         for(int i=1;i<n; ++i){
-            curr=fn(curr, array[i],  i);   
+            curr=fn(std::move(curr), array[i],  i);   
         }
         return curr;
     }

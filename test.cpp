@@ -35,6 +35,12 @@ TEST_CASE("Test for_each", "[Functional]"){
     };
     REQUIRE(futilities::for_each(std::move(testV), squareTestV)==std::vector<int>({25, 36, 49}));
 }
+TEST_CASE("Test for_each index", "[Functional]"){
+    auto squareTestV=[](const auto& index){
+        return index*index;
+    };
+    REQUIRE(futilities::for_each(0, 3, squareTestV)==std::vector<int>({0, 1, 4}));
+}
 TEST_CASE("Test for_emplace_back", "[Functional]"){
     auto valTestV=[](const auto& val){
         return val;
