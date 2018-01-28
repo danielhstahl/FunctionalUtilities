@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 #include "FunctionalUtilities.h"
+#include <chrono>
  
 TEST_CASE("Test template_power", "[Functional]"){
     double x=2.0;
@@ -178,4 +179,70 @@ TEST_CASE("Test reduce_to_single first index", "[Functional]"){
        return prev>curr?prev:curr;
     };
     REQUIRE(futilities::reduce_to_single(testV, valTestV, 10)==10);
+}
+TEST_CASE("Test for_each time", "[Functional]"){
+    int n=100000000;
+    std::vector<int> testV(n, 0);
+    auto started = std::chrono::high_resolution_clock::now();
+    auto squareTestV=[](const auto& val, const auto& index){
+        return val*val;
+    };
+    auto result=futilities::for_each(std::move(testV), squareTestV);
+    auto done = std::chrono::high_resolution_clock::now();
+    std::cout << "Speed futilities: "<<std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count()<<std::endl;
+    
+
+    std::vector<int> testVNew(n, 0);
+    auto started2 = std::chrono::high_resolution_clock::now();
+    for(int i=0; i<n;++i){
+        testVNew[i]=testVNew[i]*testVNew[i];
+    }
+    auto done2 = std::chrono::high_resolution_clock::now();
+    std::cout << "Speed standard: "<<std::chrono::duration_cast<std::chrono::milliseconds>(done2-started2).count()<<std::endl;
+
+    //REQUIRE(futilities::for_each(std::move(testV), squareTestV)==std::vector<int>({25, 36, 49}));
+}
+TEST_CASE("Test for_each time with reassignment", "[Functional]"){
+    int n=100000000;
+    std::vector<int> testV(n, 0);
+    auto started = std::chrono::high_resolution_clock::now();
+    auto squareTestV=[](const auto& val, const auto& index){
+        return val*val;
+    };
+    testV=futilities::for_each(std::move(testV), squareTestV);
+    auto done = std::chrono::high_resolution_clock::now();
+    std::cout << "Speed futilities: "<<std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count()<<std::endl;
+    
+
+    std::vector<int> testVNew(n, 0);
+    auto started2 = std::chrono::high_resolution_clock::now();
+    for(int i=0; i<n;++i){
+        testVNew[i]=testVNew[i]*testVNew[i];
+    }
+    auto done2 = std::chrono::high_resolution_clock::now();
+    std::cout << "Speed standard: "<<std::chrono::duration_cast<std::chrono::milliseconds>(done2-started2).count()<<std::endl;
+
+    //REQUIRE(futilities::for_each(std::move(testV), squareTestV)==std::vector<int>({25, 36, 49}));
+}
+TEST_CASE("Test for_each_parallel time", "[Functional]"){
+    int n=100000000;
+    std::vector<int> testV(n, 0);
+    auto started = std::chrono::high_resolution_clock::now();
+    auto squareTestV=[](const auto& val, const auto& index){
+        return val*val;
+    };
+    auto result=futilities::for_each_parallel(std::move(testV), squareTestV);
+    auto done = std::chrono::high_resolution_clock::now();
+    std::cout << "Speed futilities: "<<std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count()<<std::endl;
+    
+
+    std::vector<int> testVNew(n, 0);
+    auto started2 = std::chrono::high_resolution_clock::now();
+    for(int i=0; i<n;++i){
+        testVNew[i]=testVNew[i]*testVNew[i];
+    }
+    auto done2 = std::chrono::high_resolution_clock::now();
+    std::cout << "Speed standard: "<<std::chrono::duration_cast<std::chrono::milliseconds>(done2-started2).count()<<std::endl;
+
+    //REQUIRE(futilities::for_each(std::move(testV), squareTestV)==std::vector<int>({25, 36, 49}));
 }
