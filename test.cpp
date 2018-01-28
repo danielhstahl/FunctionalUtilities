@@ -202,11 +202,11 @@ TEST_CASE("Test for_each time", "[Functional]"){
 
     //REQUIRE(futilities::for_each(std::move(testV), squareTestV)==std::vector<int>({25, 36, 49}));
 }
-TEST_CASE("Test for_each time with reassignment", "[Functional]"){
+TEST_CASE("Test for_each time with capture lambda", "[Functional]"){
     int n=100000000;
     std::vector<int> testV(n, 0);
     auto started = std::chrono::high_resolution_clock::now();
-    auto squareTestV=[](const auto& val, const auto& index){
+    auto squareTestV=[&](const auto& val, const auto& index){
         return val*val;
     };
     testV=futilities::for_each(std::move(testV), squareTestV);
