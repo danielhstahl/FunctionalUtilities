@@ -246,7 +246,7 @@ namespace futilities{
     */
     template<typename Array, typename Function>
     auto reduce(Array&& array, Function&& fn){
-        return reduce(array, fn, array.front());
+        return reduce(std::move(array), fn, array.front());
     }
     /**
         @array array to cumulate
@@ -270,7 +270,7 @@ namespace futilities{
     */
     template<typename Array, typename Function>
     auto reduce_reverse(Array&& array, Function&& fn){
-        return reduce_reverse(array, fn, array.front());
+        return reduce_reverse(std::move(array), fn, array.front());
     }
     /**
         @array array to cumulate
@@ -294,7 +294,7 @@ namespace futilities{
     */
     template<typename Array, typename Function>
     auto reduce_copy(const Array& array, Function&& fn){
-        return reduce_copy(array, fn, array.front());
+        return reduce_copy(array, std::move(fn), array.front());
     }
     /**
         @array array to cumulate
@@ -319,7 +319,7 @@ namespace futilities{
     */
     template<typename Array, typename Function>
     auto reduce_reverse_copy(const Array& array, Function&& fn){
-        return reduce_reverse_copy(array, fn, array.front());
+        return reduce_reverse_copy(array, std::move(fn), array.front());
     }
 
     /**
@@ -329,7 +329,7 @@ namespace futilities{
     */
     template<typename Array, typename Function>
     auto cumulative_sum(Array&& array, Function&& fn){
-        return reduce(array, [&](const auto& prev, const auto& curr, const auto& index){
+        return reduce(std::move(array), [&](const auto& prev, const auto& curr, const auto& index){
             if(index==0){
                 return fn(curr, index);
             }
