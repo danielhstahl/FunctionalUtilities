@@ -381,7 +381,7 @@ namespace futilities{
     template<typename Array, typename Function>
     auto sum_subset(const Array& array, int beginFrom, int endFrom, Function&& fn){
         auto it=array.begin()+beginFrom;
-        auto myNum=fn(*it, 0);
+        auto myNum=fn(*it, beginFrom);
         ++it;
         for(it; it < array.end()-endFrom; ++it){
             myNum+=fn(*it, it-array.begin());   
