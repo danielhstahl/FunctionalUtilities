@@ -417,7 +417,7 @@ namespace futilities{
     auto recurse(const incr& n, const init& initValue, fnToApply&& fn, keepGoing&& kpg)->decltype(fn(initValue, 0)){
         incr i=0;
         auto fnVal=fn(initValue, i);
-        while(i<n&&kpg(fnVal)){
+        while(i<(n-1)&&kpg(fnVal)){
             ++i;
             fnVal=fn(fnVal, i);
         }
@@ -432,13 +432,21 @@ namespace futilities{
         }
         return std::move(initValue);
     }
+    template<typename incr, typename init, typename fnToApply>
+    auto recurse_move(const incr& n, init&& initValue, fnToApply&& fn){
+        for(incr i=0;i<n;++i){
+            initValue=fn(std::move(initValue), i);
+        }
+        return std::move(initValue);
+    }
+    /*
     template<typename init, typename fnToApply, typename keepGoing>
     auto recurse_move(init&& initValue, fnToApply&& fn, keepGoing&& kpg){
         while(kpg(initValue)){
             initValue=fn(std::move(initValue));
         }
         return std::move(initValue);
-    }
+    }*/
     
 }
 #endif
