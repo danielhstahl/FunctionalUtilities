@@ -42,6 +42,21 @@ TEST_CASE("Test for_each index", "[Functional]"){
     };
     REQUIRE(futilities::for_each(0, 3, squareTestV)==std::vector<int>({0, 1, 4}));
 }
+TEST_CASE("Test for_each provide array", "[Functional]"){
+    ///be careful with this!  can 
+    auto squareTestV=[](const auto& val, const auto& index, const auto& arr){
+        return val*val*arr[0];
+    };
+    std::vector<double> testarray={3, 4, 5};
+    REQUIRE(futilities::for_each_provide_array(std::move(testarray), squareTestV)==std::vector<double>({27, 432, 675}));
+}
+TEST_CASE("Test for_each copy array", "[Functional]"){
+    auto squareTestV=[](const auto& val, const auto& index, const auto& arr){
+        return val*val*arr[0];
+    };
+    std::vector<double> testarray={3, 4, 5};
+    REQUIRE(futilities::for_each_copy(testarray, squareTestV)==std::vector<double>({27, 48, 75}));
+}
 TEST_CASE("Test for_emplace_back", "[Functional]"){
     auto valTestV=[](const auto& val){
         return val;

@@ -177,6 +177,32 @@ namespace futilities{
         }
         return std::move(array);
     }
+    /**
+    Careful!  this function provides a mutated array (not the original array)
+        @array std-style container
+        @fn function to apply to every element in the array
+        @returns new array with fn applied to original array
+    */
+    template<typename Array, typename Function>
+    auto for_each_provide_array(Array&& array, Function&& fn){ //reuse array
+        for(auto it = array.begin(); it < array.end(); ++it){
+            *it=fn(*it, it-array.begin(), array);   
+        }
+        return std::move(array);
+    }
+    /**
+        @array std-style container
+        @fn function to apply to every element in the array
+        @returns new array with fn applied to original array
+    */
+    template<typename Array, typename Function>
+    auto for_each_copy(const Array& array, Function&& fn){ 
+        Array tmpArr=array;
+        for(auto it = tmpArr.begin(); it < tmpArr.end(); ++it){
+            *it=fn(*it, it-tmpArr.begin(), array);   
+        }
+        return std::move(tmpArr);
+    }
 
     template<typename incr, typename fnToApply>
     auto for_each(incr begin, incr end, fnToApply&& fn)->std::vector<decltype(fn(begin))>{
